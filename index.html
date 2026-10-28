@@ -4,8 +4,214 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>لعبة التخمين الرقمي</title>
-  <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --accent-color: #e74c3c;
+      --light-color: #f5f7fa;
+      --dark-color: #2c3e50;
+      --text-color: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    body {
+      background-color: var(--light-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 20px;
+      direction: rtl;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 25px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    header h1 {
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+
+    .game-description {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .game-section {
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .buttons-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .game-btn {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .submit-btn {
+      background-color: var(--secondary-color);
+      color: white;
+      margin: 15px 0;
+      width: 100%;
+    }
+
+    .restart-btn {
+      background-color: #f39c12;
+      color: white;
+    }
+
+    .menu-btn {
+      background-color: var(--accent-color);
+      color: white;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .instructions {
+      margin: 15px 0;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    .simple-input {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .ltr-input {
+      direction: ltr;
+    }
+
+    .simple-input input {
+      width: 55px;
+      height: 55px;
+      text-align: center;
+      font-size: 26px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      outline: none;
+      background: #fafafa;
+      transition: border-color 0.3s;
+    }
+
+    .simple-input input:focus {
+      border-color: var(--primary-color);
+      background: #fff;
+    }
+
+    .attempts-counter {
+      margin: 15px 0;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .feedback-container {
+      margin: 20px 0;
+    }
+
+    .feedback-title {
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .simple-feedback {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .feedback-item {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      font-weight: bold;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .correct {
+      background-color: var(--secondary-color);
+    }
+
+    .misplaced {
+      background-color: #f39c12;
+    }
+
+    .incorrect {
+      background-color: #95a5a6;
+    }
+
+    .game-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .simple-input input {
+        width: 45px;
+        height: 45px;
+        font-size: 22px;
+      }
+      
+      .buttons-container, .game-buttons {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -28,10 +234,10 @@
       <h2>اللعب ضد الحاسوب</h2>
       <div class="instructions">أدخل تخمينك المكون من 4 أرقام:</div>
       <div class="simple-input ltr-input">
-        <input type="text" maxlength="1" id="guessComputer1" oninput="autoFocusNext(this, 'guessComputer2')">
-        <input type="text" maxlength="1" id="guessComputer2" oninput="autoFocusNext(this, 'guessComputer3')">
-        <input type="text" maxlength="1" id="guessComputer3" oninput="autoFocusNext(this, 'guessComputer4')">
-        <input type="text" maxlength="1" id="guessComputer4">
+        <input type="text" maxlength="1" id="guessComputer1" oninput="autoFocusNext(this, 'guessComputer2')" onkeydown="handleBackspace(event, null, 'guessComputer1')">
+        <input type="text" maxlength="1" id="guessComputer2" oninput="autoFocusNext(this, 'guessComputer3')" onkeydown="handleBackspace(event, 'guessComputer1', 'guessComputer2')">
+        <input type="text" maxlength="1" id="guessComputer3" oninput="autoFocusNext(this, 'guessComputer4')" onkeydown="handleBackspace(event, 'guessComputer2', 'guessComputer3')">
+        <input type="text" maxlength="1" id="guessComputer4" onkeydown="handleBackspace(event, 'guessComputer3', 'guessComputer4')">
       </div>
       <button class="submit-btn" onclick="checkGuess(true)">تحقق من التخمين</button>
       <div class="attempts-counter">عدد المحاولات: <span id="computerAttempts">0</span>/10</div>
@@ -50,10 +256,10 @@
       <h2>اللاعب الأول: أدخل الكود السري</h2>
       <div class="instructions">اختر رمزًا سريًا مكونًا من 4 أرقام</div>
       <div class="simple-input ltr-input">
-        <input type="text" maxlength="1" id="code1" oninput="autoFocusNext(this, 'code2')">
-        <input type="text" maxlength="1" id="code2" oninput="autoFocusNext(this, 'code3')">
-        <input type="text" maxlength="1" id="code3" oninput="autoFocusNext(this, 'code4')">
-        <input type="text" maxlength="1" id="code4">
+        <input type="text" maxlength="1" id="code1" oninput="autoFocusNext(this, 'code2')" onkeydown="handleBackspace(event, null, 'code1')">
+        <input type="text" maxlength="1" id="code2" oninput="autoFocusNext(this, 'code3')" onkeydown="handleBackspace(event, 'code1', 'code2')">
+        <input type="text" maxlength="1" id="code3" oninput="autoFocusNext(this, 'code4')" onkeydown="handleBackspace(event, 'code2', 'code3')">
+        <input type="text" maxlength="1" id="code4" onkeydown="handleBackspace(event, 'code3', 'code4')">
       </div>
       <button class="submit-btn" onclick="startGame()">ابدأ اللعبة</button>
       <button class="menu-btn" onclick="backToMenu()">القائمة الرئيسية</button>
@@ -64,12 +270,12 @@
       <h2>اللاعب الثاني: خمن الكود</h2>
       <div class="instructions">حاول تخمين الرمز السري المكون من 4 أرقام</div>
       <div class="simple-input ltr-input">
-        <input type="text" maxlength="1" id="guess1" oninput="autoFocusNext(this, 'guess2')">
-        <input type="text" maxlength="1" id="guess2" oninput="autoFocusNext(this, 'guess3')">
-        <input type="text" maxlength="1" id="guess3" oninput="autoFocusNext(this, 'guess4')">
-        <input type="text" maxlength="1" id="guess4">
+        <input type="text" maxlength="1" id="guess1" oninput="autoFocusNext(this, 'guess2')" onkeydown="handleBackspace(event, null, 'guess1')">
+        <input type="text" maxlength="1" id="guess2" oninput="autoFocusNext(this, 'guess3')" onkeydown="handleBackspace(event, 'guess1', 'guess2')">
+        <input type="text" maxlength="1" id="guess3" oninput="autoFocusNext(this, 'guess4')" onkeydown="handleBackspace(event, 'guess2', 'guess3')">
+        <input type="text" maxlength="1" id="guess4" onkeydown="handleBackspace(event, 'guess3', 'guess4')">
       </div>
-      <button class="submit-btn" onclick="checkGuess()">تحقق من التخمين</button>
+      <button class="submit-btn" onclick="checkGuess(false)">تحقق من التخمين</button>
       <div class="attempts-counter">عدد المحاولات: <span id="playerAttempts">0</span>/10</div>
       <div class="feedback-container">
         <div class="feedback-title">النتيجة:</div>
@@ -82,6 +288,184 @@
     </section>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    let secretCode = [];
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    // الانتقال التلقائي بين الحقول
+    function autoFocusNext(current, nextId) {
+      if (!/^[0-9]$/.test(current.value)) {
+        current.value = '';
+        return;
+      }
+      if (current.value.length === 1 && nextId) {
+        document.getElementById(nextId).focus();
+      }
+    }
+
+    // دعم الرجوع بالـ Backspace بين الخانات
+    function handleBackspace(event, prevId, currentId) {
+      if (event.key === 'Backspace') {
+        const currentInput = document.getElementById(currentId);
+        if (currentInput.value === '' && prevId) {
+          document.getElementById(prevId).focus();
+        }
+      }
+    }
+
+    // بدء اللعبة ضد لاعب
+    function startPlayerVsPlayer() {
+      document.getElementById("gameSelect").classList.add("hidden");
+      document.getElementById("setCode").classList.remove("hidden");
+      resetGame();
+      document.getElementById("code1").focus();
+    }
+
+    // بدء اللعبة ضد حاسوب
+    function startPlayerVsComputer() {
+      document.getElementById("gameSelect").classList.add("hidden");
+      document.getElementById("computerGame").classList.remove("hidden");
+      resetGame();
+      
+      secretCode = Array.from({ length: 4 }, () => Math.floor(Math.random() * 10).toString());
+      document.getElementById("computerAttempts").textContent = attempts;
+      document.getElementById("guessComputer1").focus();
+    }
+
+    // بدء اللعبة (ضد لاعب)
+    function startGame() {
+      secretCode = [
+        document.getElementById("code1").value,
+        document.getElementById("code2").value,
+        document.getElementById("code3").value,
+        document.getElementById("code4").value,
+      ];
+      
+      if (secretCode.some(code => !code)) {
+        alert("الرجاء إدخال كود سري مكون من 4 أرقام!");
+        return;
+      }
+      
+      document.getElementById("setCode").classList.add("hidden");
+      document.getElementById("guessCode").classList.remove("hidden");
+      document.getElementById("playerAttempts").textContent = attempts;
+      document.getElementById("guess1").focus();
+    }
+
+    // التحقق من التخمين
+    function checkGuess(isAgainstComputer = false) {
+      const guessPrefix = isAgainstComputer ? "guessComputer" : "guess";
+      const feedbackId = isAgainstComputer ? "computerFeedback" : "playerFeedback";
+      const attemptsId = isAgainstComputer ? "computerAttempts" : "playerAttempts";
+      const restartButtonId = isAgainstComputer ? "computerRestartButton" : "playerRestartButton";
+      
+      const guess = [
+        document.getElementById(`${guessPrefix}1`).value,
+        document.getElementById(`${guessPrefix}2`).value,
+        document.getElementById(`${guessPrefix}3`).value,
+        document.getElementById(`${guessPrefix}4`).value,
+      ];
+
+      if (guess.some(code => !code)) {
+        alert("الرجاء إدخال تخمين مكون من 4 أرقام!");
+        return;
+      }
+
+      attempts++;
+      document.getElementById(attemptsId).textContent = attempts;
+
+      const feedback = [];
+      let secretCodeCopy = [...secretCode];
+      let correctPositions = 0;
+
+      for (let i = 0; i < 4; i++) {
+        if (guess[i] === secretCode[i]) {
+          feedback.push({ type: "correct", value: guess[i] });
+          secretCodeCopy[i] = null;
+          correctPositions++;
+        } else {
+          feedback.push({ type: "none", value: guess[i] });
+        }
+      }
+
+      for (let i = 0; i < 4; i++) {
+        if (feedback[i].type === "none" && secretCodeCopy.includes(guess[i])) {
+          feedback[i].type = "misplaced";
+          secretCodeCopy[secretCodeCopy.indexOf(guess[i])] = null;
+        } else if (feedback[i].type === "none") {
+          feedback[i].type = "incorrect";
+        }
+      }
+
+      const feedbackDiv = document.getElementById(feedbackId);
+      feedbackDiv.innerHTML = "";
+      
+      feedback.forEach(item => {
+        const feedbackElement = document.createElement("div");
+        feedbackElement.className = `feedback-item ${item.type}`;
+        feedbackElement.textContent = item.value;
+        feedbackDiv.appendChild(feedbackElement);
+      });
+
+      if (correctPositions === 4) {
+        showResult(true, isAgainstComputer);
+        document.getElementById(restartButtonId).classList.remove("hidden");
+      } else if (attempts >= maxAttempts) {
+        showResult(false, isAgainstComputer);
+        document.getElementById(restartButtonId).classList.remove("hidden");
+      }
+
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`${guessPrefix}${i}`).value = "";
+      }
+      document.getElementById(`${guessPrefix}1`).focus();
+    }
+
+    function showResult(isWin, isAgainstComputer) {
+      const message = isWin 
+        ? `مبروك! لقد فزت بعد ${attempts} محاولة!` 
+        : `انتهت المحاولات! الكود الصحيح كان: ${secretCode.join('')}`;
+      
+      const feedbackId = isAgainstComputer ? "computerFeedback" : "playerFeedback";
+      const feedbackDiv = document.getElementById(feedbackId);
+      
+      const resultElement = document.createElement("div");
+      resultElement.className = "result-message";
+      resultElement.textContent = message;
+      resultElement.style.fontWeight = "bold";
+      resultElement.style.margin = "10px 0";
+      resultElement.style.width = "100%";
+      resultElement.style.color = isWin ? "var(--secondary-color)" : "var(--accent-color)";
+      
+      feedbackDiv.prepend(resultElement);
+    }
+
+    function restartGame() {
+      resetGame();
+      backToMenu();
+    }
+
+    function backToMenu() {
+      document.getElementById("gameSelect").classList.remove("hidden");
+      document.getElementById("setCode").classList.add("hidden");
+      document.getElementById("guessCode").classList.add("hidden");
+      document.getElementById("computerGame").classList.add("hidden");
+      document.getElementById("computerRestartButton").classList.add("hidden");
+      document.getElementById("playerRestartButton").classList.add("hidden");
+    }
+
+    function resetGame() {
+      attempts = 0;
+      secretCode = [];
+      document.getElementById("computerAttempts").textContent = "0";
+      document.getElementById("playerAttempts").textContent = "0";
+      document.getElementById("computerFeedback").innerHTML = "";
+      document.getElementById("playerFeedback").innerHTML = "";
+      
+      const inputs = document.querySelectorAll(".simple-input input");
+      inputs.forEach(input => input.value = "");
+    }
+  </script>
 </body>
 </html>
